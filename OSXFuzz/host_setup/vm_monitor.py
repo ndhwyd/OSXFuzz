@@ -554,7 +554,7 @@ if __name__ == "__main__":
 	port = int(data['host_settings']['vmmanager_port'])
 
 	server = VMManager(args.config_file,('', port), VMMonitor)
-	print 'Started VMMonitor server on port ' , port
+	print ("Started VMMonitor server on port ") , port
 	server.serve_forever()
 
 	mt.join()
