@@ -108,47 +108,67 @@ void mach_kernelrpc_mach_vm_allocate_trap()
 {
     kern_return_t ret = -1;
     char vid[16];
-    sprintf(vid,"%u",get_time_in_ms()+rand());
+    sprintf(vid, "%u", get_time_in_ms() + rand());
     
     mach_port_name_t target = mach_task_self();
     mach_vm_address_t addr = get_fuzzed_int8();
     mach_vm_size_t size = get_fuzzed_int8();
     int flags = 0;
     
-    logger("mach_port_name_t target%s = mach_task_self();",vid);
-    logger("mach_vm_address_t addr%s = %d;",vid,addr);
-    logger("mach_vm_size_t size%s = %d;",vid,size);
-    logger("int flags%s = 0;",vid);
+    logger("mach_port_name_t target %s = mach_task_self();", vid);
+    logger("mach_vm_address_t addr %s = %d;", vid, addr);
+    logger("mach_vm_size_t size %s = %d;", vid, size);
+    logger("int flags %s = 0;", vid);
     
-    logger("_kernelrpc_mach_vm_allocate_trap(target%s,&addr%s,size%s,flags%s);",vid,vid,vid,vid);
-    ret = _kernelrpc_mach_vm_allocate_trap(target,&addr,size,flags);
+    logger("_kernelrpc_mach_vm_allocate_trap(target %s, &addr %s, size %s, flags %s);", vid, vid, vid, vid);
+    ret = _kernelrpc_mach_vm_allocate_trap(target, &addr, size, flags);
     return_logger("_kernelrpc_mach_vm_allocate_trap", ret);
 }
 
-void mach_kernelrpc_mach_vm_purgable_control_trap() {
-    
+void mach_kernelrpc_mach_vm_purgable_control_trap()
+{
     kern_return_t ret = -1;
     char vid[16];
-    sprintf(vid,"%u",get_time_in_ms()+rand());
+    sprintf(vid, "%u", get_time_in_ms() + rand());
     
     mach_port_name_t target = mach_task_self();
     mach_vm_offset_t address = get_fuzzed_int8();
     vm_purgable_t control = rand() % 3; 
     int state = get_fuzzed_int8();
     
-    logger("mach_port_name_t target%s = mach_task_self();",vid);
-    logger("mach_vm_offset_t address%s = %d;",vid,address);
-    logger("vm_purgable_t control%s = %d;",vid,control);
-    logger("int state%s = %d;",vid,state);
+    logger("mach_port_name_t target %s = mach_task_self();", vid);
+    logger("mach_vm_offset_t address %s = %d;", vid, address);
+    logger("vm_purgable_t control %s = %d;", vid, control);
+    logger("int state %s = %d;", vid, state);
     
-    logger("_kernelrpc_mach_vm_purgable_control_trap(target%s,address%s,control%s,&state%s);",vid,vid,vid,vid);
-    ret = _kernelrpc_mach_vm_purgable_control_trap(target,address,control,&state);
+    logger("_kernelrpc_mach_vm_purgable_control_trap(target %s, address %s, control %s, &state %s);", vid, vid, vid, vid);
+    ret = _kernelrpc_mach_vm_purgable_control_trap(target, address, control, &state);
     return_logger("_kernelrpc_mach_vm_purgable_control_trap", ret);
+}
+
+void mach_kernelrpc_mach_vm_deallocate_trap()
+{
+    kern_return_t ret = -1;
+    char vid[16];
+    sprintf(vid, "%u", get_time_in_ms() + rand());
+    
+    mach_port_name_t target = mach_task_self();
+    mach_vm_address_t addr = get_fuzzed_int8();
+    mach_vm_size_t size = get_fuzzed_int8();
+    
+    logger("mach_port_name_t target %s = mach_task_self();", vid);
+    logger("mach_vm_address_t addr %s = %d;", vid, addr);
+    logger("mach_vm_size_t size %s = %d;", vid, size);
+    
+    logger("_kernelrpc_mach_vm_deallocate_trap(target %s, &addr %s, size %s);", vid, vid, vid);
+    ret = _kernelrpc_mach_vm_deallocate_trap(target, addr, size);
+    return_logger("_kernelrpc_mach_vm_deallocate_trap", ret);
 }
 
 void (*MACH_TRAPS[]) () = {
     mach_kernelrpc_mach_vm_allocate_trap,
-    mach_kernelrpc_mach_vm_purgable_control_trap
+    mach_kernelrpc_mach_vm_purgable_control_trap,
+    mach_kernelrpc_mach_vm_deallocate_trap
     // INSERT MORE MACH TRAPS HERE!
 };
 
